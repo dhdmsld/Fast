@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumen · پنل کانفیگ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- نوار وضعیت -->
+  <div class="status-bar">
+    <span>VPN</span>
+    <span>4G</span>
+    <span>1:21</span>
+    <span>20:33</span>
+  </div>
+
+  <!-- ======== صفحه خاموش (طناب) ======== -->
+  <div id="off-state">
+    <div class="pull-cord" id="pullCord">
+      <div class="cord-line"></div>
+      <div class="cord-handle">💡</div>
+      <span class="pull-hint">بکش</span>
+    </div>
+    <div class="flash-overlay"></div>
+  </div>
+
+  <!-- ======== صفحه روشن (Lumen + پنل کانفیگ) ======== -->
+  <div id="on-state">
+
+    <!-- کارت لاگین Lumen -->
+    <div class="lumen-card" id="loginCard">
+      <div class="lumen-logo">Lumen</div>
+      <p class="lumen-sub">Welcome back — the light's on for you.</p>
+      <form id="loginForm">
+        <div class="input-group">
+          <label>نام کاربری</label>
+          <input type="text" id="usernameInput" placeholder="reza grootz">
+        </div>
+        <div class="input-group">
+          <label>رمز عبور</label>
+          <div class="pass-wrapper">
+            <input type="password" id="passwordInput" placeholder="••••••••">
+            <button type="button" id="showPassBtn">Show</button>
+          </div>
+        </div>
+        <div class="form-actions">
+          <label class="remember"><input type="checkbox"> مرا به خاطر بسپار</label>
+          <a href="#" class="forgot">فراموش کردی؟</a>
+        </div>
+        <button type="submit" class="signin-btn">ورود به پنل</button>
+        <p class="signup-link">حساب نداری؟ <a href="#">همین الان بساز</a></p>
+      </form>
+    </div>
+
+    <!-- ======== پنل کانفیگ ======== -->
+    <div id="panel-container" style="display:none; width:100%; max-width:900px;">
+
+      <!-- هدر پنل -->
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fas fa-cog" style="color:#fbbf24;"></i>
+          <span>پنل مدیریت کانفیگ</span>
+        </div>
+        <div class="panel-user">
+          <i class="fas fa-user-circle"></i>
+          <span id="displayUsername">reza grootz</span>
+          <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+
+      <!-- کارت‌های آمار -->
+      <div class="stats-grid">
+        <div class="stat-card"><i class="fas fa-list"></i><div><span class="stat-number">12</span><span class="stat-label">کل کانفیگ‌ها</span></div></div>
+        <div class="stat-card active"><i class="fas fa-check-circle"></i><div><span class="stat-number">8</span><span class="stat-label">فعال</span></div></div>
+        <div class="stat-card inactive"><i class="fas fa-times-circle"></i><div><span class="stat-number">4</span><span class="stat-label">غیرفعال</span></div></div>
+        <div class="stat-card online"><i class="fas fa-wifi"></i><div><span class="stat-number">6</span><span class="stat-label">آنلاین</span></div></div>
+      </div>
+
+      <!-- نوار ابزار -->
+      <div class="panel-toolbar">
+        <button id="newConfigBtn" class="btn-primary"><i class="fas fa-plus"></i> ساخت کانفیگ جدید</button>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="جستجوی کانفیگ...">
+        </div>
+      </div>
+
+      <!-- جدول کانفیگ‌ها -->
+      <div class="config-table-wrapper">
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th>نام</th>
+              <th>پروتکل</th>
+              <th>تاریخ انقضا</th>
+              <th>وضعیت</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody id="configTableBody">
+            <tr>
+              <td>کانفیگ اصلی</td>
+              <td>V2Ray</td>
+              <td>۱۴۰۴/۰۲/۱۵</td>
+              <td><span class="badge active">فعال</span></td>
+              <td>
+                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
+                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>کانفیگ تست</td>
+              <td>Shadowsocks</td>
+              <td>۱۴۰۴/۰۱/۲۰</td>
+              <td><span class="badge inactive">غیرفعال</span></td>
+              <td>
+                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
+                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>کانفیگ VIP</td>
+              <td>WireGuard</td>
+              <td>۱۴۰۴/۰۳/۰۱</td>
+              <td><span class="badge active">فعال</span></td>
+              <td>
+                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
+                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- مودال ساخت کانفیگ جدید -->
+    <div id="newConfigModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle" style="color:#fbbf24;"></i> کانفیگ جدید</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="newConfigForm">
+          <div class="input-group">
+            <label>نام کانفیگ</label>
+            <input type="text" placeholder="مثلاً کانفیگ شخصی" required>
+          </div>
+          <div class="input-group">
+            <label>پروتکل</label>
+            <select>
+              <option>V2Ray</option>
+              <option>Shadowsocks</option>
+              <option>WireGuard</option>
+              <option>OpenVPN</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>تاریخ انقضا</label>
+            <input type="date" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;">ساخت کانفیگ</button>
+        </form>
+      </div>
+    </div>
+
+  </div> <!-- پایان #on-state -->
+
+  <script src="app.js"></script>
+</body>
+          </html>
