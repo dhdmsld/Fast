@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumen · پنل کانفیگ</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumen · پنل کانفیگ پیشرفته</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
+
   <!-- نوار وضعیت -->
   <div class="status-bar">
     <span>VPN</span>
     <span>4G</span>
-    <span>1:21</span>
+    <span id="liveClock">1:21</span>
     <span>20:33</span>
   </div>
 
-  <!-- ======== صفحه خاموش (طناب) ======== -->
+  <!-- ======== OFF STATE (طناب) ======== -->
   <div id="off-state">
     <div class="pull-cord" id="pullCord">
       <div class="cord-line"></div>
@@ -26,27 +27,27 @@
     <div class="flash-overlay"></div>
   </div>
 
-  <!-- ======== صفحه روشن (Lumen + پنل کانفیگ) ======== -->
+  <!-- ======== ON STATE ======== -->
   <div id="on-state">
 
-    <!-- کارت لاگین Lumen -->
+    <!-- کارت لاگین -->
     <div class="lumen-card" id="loginCard">
       <div class="lumen-logo">Lumen</div>
       <p class="lumen-sub">Welcome back — the light's on for you.</p>
       <form id="loginForm">
         <div class="input-group">
           <label>نام کاربری</label>
-          <input type="text" id="usernameInput" placeholder="reza grootz">
+          <input type="text" id="usernameInput" placeholder="reza grootz" />
         </div>
         <div class="input-group">
           <label>رمز عبور</label>
           <div class="pass-wrapper">
-            <input type="password" id="passwordInput" placeholder="••••••••">
+            <input type="password" id="passwordInput" placeholder="••••••••" />
             <button type="button" id="showPassBtn">Show</button>
           </div>
         </div>
         <div class="form-actions">
-          <label class="remember"><input type="checkbox"> مرا به خاطر بسپار</label>
+          <label class="remember"><input type="checkbox" /> مرا به خاطر بسپار</label>
           <a href="#" class="forgot">فراموش کردی؟</a>
         </div>
         <button type="submit" class="signin-btn">ورود به پنل</button>
@@ -55,13 +56,19 @@
     </div>
 
     <!-- ======== پنل کانفیگ ======== -->
-    <div id="panel-container" style="display:none; width:100%; max-width:900px;">
+    <div id="panel-container" style="display:none; width:100%; max-width:1100px;">
 
       <!-- هدر پنل -->
       <div class="panel-header">
         <div class="panel-title">
           <i class="fas fa-cog" style="color:#fbbf24;"></i>
           <span>پنل مدیریت کانفیگ</span>
+        </div>
+        <div class="panel-actions">
+          <button id="themeToggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+          <button id="exportJson" class="icon-btn"><i class="fas fa-download"></i></button>
+          <button id="importJson" class="icon-btn"><i class="fas fa-upload"></i></button>
+          <input type="file" id="fileInput" accept=".json" style="display:none;" />
         </div>
         <div class="panel-user">
           <i class="fas fa-user-circle"></i>
@@ -70,86 +77,70 @@
         </div>
       </div>
 
-      <!-- کارت‌های آمار -->
-      <div class="stats-grid">
-        <div class="stat-card"><i class="fas fa-list"></i><div><span class="stat-number">12</span><span class="stat-label">کل کانفیگ‌ها</span></div></div>
-        <div class="stat-card active"><i class="fas fa-check-circle"></i><div><span class="stat-number">8</span><span class="stat-label">فعال</span></div></div>
-        <div class="stat-card inactive"><i class="fas fa-times-circle"></i><div><span class="stat-number">4</span><span class="stat-label">غیرفعال</span></div></div>
-        <div class="stat-card online"><i class="fas fa-wifi"></i><div><span class="stat-number">6</span><span class="stat-label">آنلاین</span></div></div>
+      <!-- کارت‌های آمار (پویا) -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><i class="fas fa-list"></i><div><span class="stat-number" id="totalCount">0</span><span class="stat-label">کل کانفیگ‌ها</span></div></div>
+        <div class="stat-card active"><i class="fas fa-check-circle"></i><div><span class="stat-number" id="activeCount">0</span><span class="stat-label">فعال</span></div></div>
+        <div class="stat-card inactive"><i class="fas fa-times-circle"></i><div><span class="stat-number" id="inactiveCount">0</span><span class="stat-label">غیرفعال</span></div></div>
+        <div class="stat-card online"><i class="fas fa-wifi"></i><div><span class="stat-number" id="onlineCount">0</span><span class="stat-label">آنلاین</span></div></div>
       </div>
 
       <!-- نوار ابزار -->
       <div class="panel-toolbar">
-        <button id="newConfigBtn" class="btn-primary"><i class="fas fa-plus"></i> ساخت کانفیگ جدید</button>
+        <button id="newConfigBtn" class="btn-primary"><i class="fas fa-plus"></i> ساخت کانفیگ</button>
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="جستجوی کانفیگ...">
+          <input type="text" id="searchInput" placeholder="جستجو در نام، پروتکل..." />
+        </div>
+        <div class="filter-box">
+          <select id="statusFilter">
+            <option value="all">همه</option>
+            <option value="active">فعال</option>
+            <option value="inactive">غیرفعال</option>
+          </select>
         </div>
       </div>
 
       <!-- جدول کانفیگ‌ها -->
       <div class="config-table-wrapper">
-        <table class="config-table">
+        <table class="config-table" id="configTable">
           <thead>
             <tr>
-              <th>نام</th>
-              <th>پروتکل</th>
-              <th>تاریخ انقضا</th>
-              <th>وضعیت</th>
+              <th data-sort="name">نام <i class="fas fa-sort"></i></th>
+              <th data-sort="protocol">پروتکل <i class="fas fa-sort"></i></th>
+              <th data-sort="expiry">تاریخ انقضا <i class="fas fa-sort"></i></th>
+              <th data-sort="status">وضعیت <i class="fas fa-sort"></i></th>
               <th>عملیات</th>
             </tr>
           </thead>
-          <tbody id="configTableBody">
-            <tr>
-              <td>کانفیگ اصلی</td>
-              <td>V2Ray</td>
-              <td>۱۴۰۴/۰۲/۱۵</td>
-              <td><span class="badge active">فعال</span></td>
-              <td>
-                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
-                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <td>کانفیگ تست</td>
-              <td>Shadowsocks</td>
-              <td>۱۴۰۴/۰۱/۲۰</td>
-              <td><span class="badge inactive">غیرفعال</span></td>
-              <td>
-                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
-                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <td>کانفیگ VIP</td>
-              <td>WireGuard</td>
-              <td>۱۴۰۴/۰۳/۰۱</td>
-              <td><span class="badge active">فعال</span></td>
-              <td>
-                <button class="action-btn copy"><i class="fas fa-copy"></i></button>
-                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="configTableBody"></tbody>
         </table>
+      </div>
+
+      <!-- پیجینیشن -->
+      <div class="pagination">
+        <button id="prevPage"><i class="fas fa-chevron-right"></i></button>
+        <span id="pageInfo">صفحه ۱ از ۱</span>
+        <button id="nextPage"><i class="fas fa-chevron-left"></i></button>
       </div>
     </div>
 
-    <!-- مودال ساخت کانفیگ جدید -->
-    <div id="newConfigModal" class="modal">
+    <!-- مودال ساخت/ویرایش -->
+    <div id="configModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3><i class="fas fa-plus-circle" style="color:#fbbf24;"></i> کانفیگ جدید</h3>
+          <h3 id="modalTitle"><i class="fas fa-plus-circle" style="color:#fbbf24;"></i> کانفیگ جدید</h3>
           <button class="close-modal">&times;</button>
         </div>
-        <form id="newConfigForm">
+        <form id="configForm">
+          <input type="hidden" id="editId" />
           <div class="input-group">
             <label>نام کانفیگ</label>
-            <input type="text" placeholder="مثلاً کانفیگ شخصی" required>
+            <input type="text" id="configName" placeholder="مثلاً کانفیگ شخصی" required />
           </div>
           <div class="input-group">
             <label>پروتکل</label>
-            <select>
+            <select id="configProtocol">
               <option>V2Ray</option>
               <option>Shadowsocks</option>
               <option>WireGuard</option>
@@ -158,15 +149,22 @@
           </div>
           <div class="input-group">
             <label>تاریخ انقضا</label>
-            <input type="date" required>
+            <input type="date" id="configExpiry" required />
           </div>
-          <button type="submit" class="btn-primary" style="width:100%;">ساخت کانفیگ</button>
+          <div class="input-group">
+            <label>وضعیت</label>
+            <select id="configStatus">
+              <option value="active">فعال</option>
+              <option value="inactive">غیرفعال</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;">ذخیره</button>
         </form>
       </div>
     </div>
 
-  </div> <!-- پایان #on-state -->
+  </div> <!-- پایان on-state -->
 
   <script src="app.js"></script>
 </body>
-          </html>
+</html>
